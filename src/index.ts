@@ -22,7 +22,7 @@ client.once("ready", () => {
 
 client.on("message", (message) => {
   const { args, command } = getBotCommandArgs(message.content || "");
-  const isValid = isValidCommand(command);
+  const isValid = isValidCommand(command.toLowerCase());
 
   if (message.author?.bot) {
     return;
