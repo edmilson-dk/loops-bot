@@ -8,7 +8,7 @@ import { playMusic } from "./core/discord-music";
 
 const TOKEN = process.env.BOT_SECRET_TOKEN;
 
-const client = new Client();
+const client = new Client({});
 
 const servers: ServerType = {};
 const musics = [
@@ -43,14 +43,21 @@ client.on("message", (message) => {
   }
 
   const server = servers[message.guild?.id || ""];
+  console.log({ server, servers });
 
-  message.member?.voice.channel?.join().then((connection) => {
-    switch (command) {
-      case "!loop":
-        playMusic(connection, message, servers, server.queue[0]);
-        break;
-    }
-  });
+  message.member?.voice.channel
+    ?.join()
+    .then((connection) => {
+      switch (command) {
+        case "!loop":
+          playMusic(connection, message, servers, server.queue[0]);
+          break;
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      message.channel?.send("An unexpected error occurred :( please try again.");
+    });
 });
 
 client.login(TOKEN);
