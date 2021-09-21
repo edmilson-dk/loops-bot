@@ -16,7 +16,7 @@ export function playMusic(
     return;
   }
 
-  let actualSongIndex = server.queue.findIndex((song) => song === url);
+  const actualSongIndex = server.queue.findIndex((song) => song === url);
   const stream = ytdl(url, { filter: "audioonly" });
   const dispatcher = connection.play(stream);
 
@@ -27,10 +27,7 @@ export function playMusic(
   dispatcher.on("finish", () => {
     console.log(url, "has finished playing!");
 
-    if (server.queue[actualSongIndex + 1]) {
-      playMusic(connection, message, servers, server.queue[actualSongIndex + 1]);
-    } else {
-      playMusic(connection, message, servers, server.queue[0]);
-    }
+    const index = server.queue[actualSongIndex + 1] ? actualSongIndex + 1 : 0;
+    playMusic(connection, message, servers, server.queue[index]);
   });
 }
