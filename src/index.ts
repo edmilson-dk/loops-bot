@@ -5,16 +5,12 @@ dotenv.config();
 import { getBotCommandArgs, isValidCommand } from "./helpers/parserCommands";
 import { ServerType } from "./types";
 import { playMusic } from "./core/discord-music";
-
-const TOKEN = process.env.BOT_SECRET_TOKEN;
+import { MUSICS } from "./constants";
 
 const client = new Client({});
 
+const TOKEN = process.env.BOT_SECRET_TOKEN;
 const servers: ServerType = {};
-const musics = [
-  "https://www.youtube.com/watch?v=5jbpMeoO0f8",
-  "https://www.youtube.com/watch?v=5JCIHeQsUog",
-];
 
 client.once("ready", () => {
   console.log("Ready!");
@@ -39,11 +35,10 @@ client.on("message", (message) => {
   }
 
   if (!servers[message.guild?.id || ""]) {
-    servers[message.guild?.id || ""] = { queue: musics };
+    servers[message.guild?.id || ""] = { queue: MUSICS };
   }
 
   const server = servers[message.guild?.id || ""];
-  console.log({ server, servers });
 
   message.member?.voice.channel
     ?.join()
