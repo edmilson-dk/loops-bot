@@ -3,10 +3,18 @@ import { Client } from "discord.js";
 dotenv.config();
 
 import { getBotCommandArgs, isValidCommand } from "./helpers/parserCommands";
+import { ServerType } from "./types";
+import { playMusic } from "./core/discord-music";
 
 const TOKEN = process.env.BOT_SECRET_TOKEN;
 
 const client = new Client();
+
+const servers: ServerType = {};
+const musics = [
+  "https://www.youtube.com/watch?v=5jbpMeoO0f8",
+  "https://www.youtube.com/watch?v=5JCIHeQsUog",
+];
 
 client.once("ready", () => {
   console.log("Ready!");
@@ -25,17 +33,24 @@ client.on("message", (message) => {
     return;
   }
 
-  if (args.length === 0) {
-    message.channel?.send("You need to provide a music link");
-    return;
-  }
-
   if (!message.member?.voice.channel) {
     message.channel?.send("You need to be in a voice channel to use this command!");
     return;
-  } else {
-    message.member?.voice.channel?.join();
   }
+
+  if (!servers[message.guild?.id || ""]) {
+    servers[message.guild?.id || ""] = { queue: musics };
+  }
+
+  const server = servers[message.guild?.id || ""];
+
+  message.member?.voice.channel?.join().then((connection) => {
+    switch (command) {
+      case "!loop":
+        playMusic(connection, message, servers, server.queue[0]);
+        break;
+    }
+  });
 });
 
 client.login(TOKEN);
