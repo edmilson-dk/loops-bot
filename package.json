@@ -1,0 +1,37 @@
+{
+  "name": "loops-bot",
+  "version": "0.1.0",
+  "main": "index.js",
+  "repository": "git@github.com:Code-Sounds/loops-bot.git",
+  "author": "edmilson-dk <droidvidaboa@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "rm -rf dist && npm run format && tsc",
+    "start": "rm -rf dist && tsc && node dist/src/index.js",
+    "start:dev": "npx ts-node-dev --respawn --pretty --transpile-only src/index.ts",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "tslint -p tsconfig.json"
+  },
+  "bugs": {
+    "url": "git@github.com:Code-Sounds/loops-bot.git/issues"
+  },
+  "homepage": "git@github.com:Code-Sounds/loops-bot.git#readme",
+  "files": [
+    "index.d.ts",
+    "index.js",
+    "dist/index.js",
+    "dist/**/*"
+  ],
+  "types": "dist/index.d.ts",
+  "bin": {
+    "loops": "dist/index.js"
+  },
+  "devDependencies": {
+    "@types/node": "^16.4.3",
+    "prettier": "^2.3.2",
+    "ts-node": "^10.1.0",
+    "tslint": "^6.1.3",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^4.3.5"
+  }
+}
