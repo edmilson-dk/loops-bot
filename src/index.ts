@@ -3,17 +3,26 @@ import { Client } from "discord.js";
 dotenv.config();
 
 import { getBotCommandArgs, isValidCommand } from "./helpers/parserCommands";
-import { ServerType } from "./types";
 import { playMusic } from "./core/discord-music";
 import { MUSICS } from "./constants";
 
 const client = new Client({});
 
 const TOKEN = process.env.BOT_SECRET_TOKEN;
-const servers: ServerType = {};
 
 client.once("ready", () => {
   console.log("Ready!");
+});
+
+const broadcast = client.voice?.createBroadcast();
+
+broadcast?.once("subscribe", () => {
+  console.log("Starting player...");
+  playMusic(broadcast, MUSICS[0]);
+});
+
+broadcast?.on("subscribe", () => {
+  console.log("Broadcast playing in...");
 });
 
 client.on("message", (message) => {
@@ -34,25 +43,22 @@ client.on("message", (message) => {
     return;
   }
 
-  if (!servers[message.guild?.id || ""]) {
-    servers[message.guild?.id || ""] = { queue: MUSICS };
+  if (broadcast) {
+    message.member?.voice.channel
+      ?.join()
+      .then((connection) => {
+        switch (command) {
+          case "!loop":
+            message.channel?.send("Looping music, await...");
+            connection.play(broadcast);
+            break;
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        message.channel?.send("An unexpected error occurred :( please try again.");
+      });
   }
-
-  const server = servers[message.guild?.id || ""];
-
-  message.member?.voice.channel
-    ?.join()
-    .then((connection) => {
-      switch (command) {
-        case "!loop":
-          playMusic(connection, message, servers, server.queue[0]);
-          break;
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      message.channel?.send("An unexpected error occurred :( please try again.");
-    });
 });
 
 client.login(TOKEN);
