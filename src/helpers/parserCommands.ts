@@ -1,3 +1,5 @@
+import { COMMANDS_NAMES } from "../constants";
+
 type ParsedCommandType = {
   command: string;
   args: string[];
@@ -10,4 +12,11 @@ export function getBotCommandArgs(message: string): ParsedCommandType {
     command: args[0],
     args: args.slice(1).filter((arg) => arg !== ""),
   };
+}
+
+export function isValidCommand(command: string): boolean {
+  const containsCommand = COMMANDS_NAMES.includes(command);
+
+  if (!command.startsWith("!")) return false;
+  return containsCommand;
 }
