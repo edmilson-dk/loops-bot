@@ -9,5 +9,7 @@ Bot para o discord, com finalidade de tocar músicas em um canal de voz em loop,
 
 ## To-do
 
-- [ ] Criar o comando **[!loop]** para começar o loop de músicas no servidor.
-- [ ] Criar o comando **[!stop]** para parar o loop de músicas no servidor.
+- [x] Criar o comando **[!loop]** para começar o loop de músicas no servidor.
+- [x] Criar o comando **[!stop]** para parar o loop de músicas no servidor.
+- [ ] Fazer fetch das músicas armazenadas no banco de dados.
+- [ ] Salvar quantidade de servidores que o bot está em loop na API externa.
