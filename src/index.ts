@@ -52,6 +52,10 @@ client.on("message", (message) => {
             message.channel?.send("Looping music, await...");
             connection.play(broadcast);
             break;
+          case "!stop":
+            message.channel?.send("Stopping music, await...");
+            connection.disconnect();
+            break;
         }
       })
       .catch((err) => {
