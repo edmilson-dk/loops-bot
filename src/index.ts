@@ -5,10 +5,12 @@ dotenv.config();
 import { getBotCommandArgs, isValidCommand } from "./helpers/parserCommands";
 import { playMusic } from "./core/discord-music";
 import { MUSICS } from "./constants";
+import { DiscordServerType } from "./types";
 
 const client = new Client({});
 
 const TOKEN = process.env.BOT_SECRET_TOKEN;
+const servers: DiscordServerType[] = [];
 
 client.once("ready", () => {
   console.log("Ready!");
@@ -22,23 +24,34 @@ broadcast?.once("subscribe", () => {
 });
 
 broadcast?.on("subscribe", () => {
-  console.log("Broadcast playing in...");
+  console.log("Subscribed to new broadcast!");
 });
 
 client.on("message", (message) => {
   const { args, command } = getBotCommandArgs(message.content || "");
   const isValid = isValidCommand(command.toLowerCase());
 
-  if (message.author?.bot) {
-    return;
-  }
+  if (message.author?.bot) return;
 
-  if (!isValid) {
+  const existsServer = servers.findIndex((server) => server.id === message.guild?.id);
+  const server =
+    existsServer >= 0
+      ? servers[existsServer]
+      : ({
+          id: message.guild?.id || "",
+          name: message.guild?.name || "",
+          isPlaying: false,
+          isStopped: false,
+        } as DiscordServerType);
+
+  if (existsServer < 0) servers.push(server);
+
+  if (!isValid && !server?.isStopped) {
     message.channel?.send("Invalid command, use !loop or !stop command");
     return;
   }
 
-  if (!message.member?.voice.channel) {
+  if (isValid && !message.member?.voice.channel && !server?.isPlaying) {
     message.channel?.send("You need to be in a voice channel to use this command!");
     return;
   }
@@ -49,12 +62,19 @@ client.on("message", (message) => {
       .then((connection) => {
         switch (command) {
           case "!loop":
-            message.channel?.send("Looping music, await...");
-            connection.play(broadcast);
+            if (!server?.isPlaying) {
+              console.log(`New play started in server *${server.name}*`);
+
+              message.channel?.send("Starting player...");
+              connection.play(broadcast);
+              server.isPlaying = true;
+            }
             break;
           case "!stop":
-            message.channel?.send("Stopping music, await...");
+            message.channel?.send("Stopping player...");
             connection.disconnect();
+            server.isPlaying = false;
+            server.isStopped = true;
             break;
         }
       })
