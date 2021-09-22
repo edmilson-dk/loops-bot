@@ -27,7 +27,7 @@ broadcast?.on("subscribe", () => {
   console.log("Subscribed to new broadcast!");
 });
 
-client.on("message", (message) => {
+client.on("message", async (message) => {
   const { args, command } = getBotCommandArgs(message.content || "");
   const isValid = isValidCommand(command.toLowerCase());
 
@@ -42,46 +42,53 @@ client.on("message", (message) => {
           name: message.guild?.name || "",
           isPlaying: false,
           isStopped: false,
+          voiceConnect: null,
         } as DiscordServerType);
 
   if (existsServer < 0) servers.push(server);
 
-  if (!isValid && !server?.isStopped) {
-    message.channel?.send("Invalid command, use !loop or !stop command");
+  if (!isValid && !server?.isStopped && !server?.isPlaying) {
+    message.channel?.send("Comando inválido!, envie o comando !loop ou !stop");
     return;
   }
 
   if (isValid && !message.member?.voice.channel && !server?.isPlaying) {
-    message.channel?.send("You need to be in a voice channel to use this command!");
+    message.channel?.send("Você precisa estar em um canal de voz para usar este comando!");
     return;
   }
 
   if (broadcast) {
-    message.member?.voice.channel
-      ?.join()
-      .then((connection) => {
-        switch (command) {
-          case "!loop":
-            if (!server?.isPlaying) {
-              console.log(`New play started in server *${server.name}*`);
+    try {
+      switch (command) {
+        case "!loop":
+          if (!server?.isPlaying) {
+            const connection = await message.member?.voice.channel?.join();
 
-              message.channel?.send("Starting player...");
+            console.log(`New play started in server *${server.name}*`);
+            message.channel?.send("Iniciando a festa! 🎼");
+
+            if (connection) {
               connection.play(broadcast);
+
               server.isPlaying = true;
+              server.isStopped = false;
+              server.voiceConnect = connection;
             }
-            break;
-          case "!stop":
-            message.channel?.send("Stopping player...");
-            connection.disconnect();
-            server.isPlaying = false;
-            server.isStopped = true;
-            break;
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        message.channel?.send("An unexpected error occurred :( please try again.");
-      });
+          }
+          break;
+        case "!stop":
+          message.channel?.send("Parando a festa! 🏃‍♂️");
+
+          server.voiceConnect?.disconnect();
+          server.isPlaying = false;
+          server.isStopped = true;
+          break;
+        default:
+          break;
+      }
+    } catch (error) {
+      message.channel?.send("Ops! Algo deu errado, tente novamente!");
+    }
   }
 });
 
