@@ -30,6 +30,7 @@ broadcast?.on("subscribe", () => {
   console.log("Subscribed to new broadcast!");
 });
 
+/*
 broadcast?.on("unsubscribe", (dis) => {
   const client = dis.broadcast?.client;
 
@@ -42,6 +43,7 @@ broadcast?.on("unsubscribe", (dis) => {
     });
   }
 });
+*/
 
 client.on("message", async (message) => {
   const { command } = getBotCommandArgs(message.content || "");
