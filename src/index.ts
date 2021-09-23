@@ -5,12 +5,15 @@ dotenv.config();
 import { getBotCommandArgs, isValidCommand } from "./helpers/parserCommands";
 import { playMusic } from "./core/discord-music";
 import { MUSICS } from "./constants";
-import { DiscordServerType } from "./types";
+import { DiscordServers } from "./domain/discord-servers";
+import { ServerEvents } from "./core/server-events";
 
 const client = new Client({});
 
 const TOKEN = process.env.BOT_SECRET_TOKEN;
-const servers: DiscordServerType[] = [];
+
+const discordServers = new DiscordServers();
+const serverEvents = new ServerEvents();
 
 client.once("ready", () => {
   console.log("Ready!");
@@ -28,29 +31,25 @@ broadcast?.on("subscribe", () => {
 });
 
 broadcast?.on("unsubscribe", (dis) => {
-  console.log(dis.broadcast?.client.toJSON());
-  console.log("Unsubscribed from broadcast!");
+  const client = dis.broadcast?.client;
+
+  if (client) {
+    client.guilds.cache.forEach((guild) => {
+      const server = discordServers.getServer(guild.id);
+      if (server) serverEvents.onServerStop(server);
+
+      console.log(`Unsubscribed from ${guild.name}`);
+    });
+  }
 });
 
 client.on("message", async (message) => {
-  const { args, command } = getBotCommandArgs(message.content || "");
+  const { command } = getBotCommandArgs(message.content || "");
   const isValid = isValidCommand(command.toLowerCase());
 
-  if (message.author?.bot) return;
+  if (message.author?.bot || message.channel?.type === "dm") return;
 
-  const existsServer = servers.findIndex((server) => server.id === message.guild?.id);
-  const server =
-    existsServer >= 0
-      ? servers[existsServer]
-      : ({
-          id: message.guild?.id || "",
-          name: message.guild?.name || "",
-          isPlaying: false,
-          isStopped: false,
-          voiceConnect: null,
-        } as DiscordServerType);
-
-  if (existsServer < 0) servers.push(server);
+  const server = discordServers.createServer(message.guild?.id || "", message.guild?.name || "");
 
   if (!isValid && !server?.isStopped && !server?.isPlaying) {
     message.channel?.send("Comando inválido!, envie o comando !loop ou !stop");
@@ -74,19 +73,16 @@ client.on("message", async (message) => {
 
             if (connection) {
               connection.play(broadcast);
-
-              server.isPlaying = true;
-              server.isStopped = false;
-              server.voiceConnect = connection;
+              serverEvents.onServerLoop(server, connection);
             }
           }
           break;
         case "!stop":
-          message.channel?.send("Parando a festa! 🏃‍♂️");
+          if (!server?.isStopped) {
+            message.channel?.send("Parando a festa! 🏃‍♂️");
+            serverEvents.onServerStop(server);
+          }
 
-          server.voiceConnect?.disconnect();
-          server.isPlaying = false;
-          server.isStopped = true;
           break;
         default:
           break;
