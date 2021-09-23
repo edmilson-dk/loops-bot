@@ -1,6 +1,6 @@
-import { DiscordServerType } from "../types";
+import { DiscordServerType } from "../../types";
 
-export class Servers {
+export class DiscordServer {
   public servers: DiscordServerType[] = [];
 
   private makeServer(id: string) {

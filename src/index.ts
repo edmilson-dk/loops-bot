@@ -27,6 +27,11 @@ broadcast?.on("subscribe", () => {
   console.log("Subscribed to new broadcast!");
 });
 
+broadcast?.on("unsubscribe", (dis) => {
+  console.log(dis.broadcast?.client.toJSON());
+  console.log("Unsubscribed from broadcast!");
+});
+
 client.on("message", async (message) => {
   const { args, command } = getBotCommandArgs(message.content || "");
   const isValid = isValidCommand(command.toLowerCase());
