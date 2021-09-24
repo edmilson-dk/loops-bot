@@ -1,7 +1,9 @@
+import { Client } from "discord.js";
 import { DiscordServerType } from "../../types";
 
 export class DiscordServers {
   private servers: DiscordServerType[] = [];
+  private connections: string[] = [];
 
   private makeServer(id: string, name: string) {
     const server: DiscordServerType = {
@@ -41,5 +43,24 @@ export class DiscordServers {
     if (index >= 0) return this.servers[index];
 
     return null;
+  }
+
+  public getConnections(): string[] {
+    return this.connections;
+  }
+
+  public updateConnections(client: Client) {
+    const joineds = client.voice?.connections.keyArray();
+    if (joineds) this.connections = joineds;
+
+    return this.connections;
+  }
+
+  public hasConnection(serverId: string): boolean {
+    return this.connections.includes(serverId);
+  }
+
+  public hasServer(serverId: string): boolean {
+    return this.findServerIndex(serverId) >= 0;
   }
 }

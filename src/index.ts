@@ -7,6 +7,7 @@ import { playMusic } from "./core/discord-music";
 import { MUSICS } from "./constants";
 import { DiscordServers } from "./domain/discord-servers";
 import { ServerEvents } from "./core/server-events";
+import { logger } from "./helpers/logger";
 
 const client = new Client({});
 
@@ -21,35 +22,48 @@ client.once("ready", () => {
 
 const broadcast = client.voice?.createBroadcast();
 
-broadcast?.once("subscribe", () => {
-  console.log("Starting player...");
+broadcast?.once("subscribe", (dispatch) => {
+  logger.info("Starting player...");
   playMusic(broadcast, MUSICS[0]);
 });
 
-broadcast?.on("subscribe", () => {
-  console.log("Subscribed to new broadcast!");
+broadcast?.on("subscribe", (dispatch) => {
+  const client = dispatch.broadcast?.client;
+  if (client) {
+    discordServers.updateConnections(client);
+  }
+
+  logger.info("Subscribed to new broadcast!");
 });
 
 broadcast?.on("unsubscribe", (dis) => {
   const client = dis.broadcast?.client;
 
   if (client) {
-    client.guilds.cache.forEach((guild) => {
-      const server = discordServers.getServer(guild.id);
-      if (server) serverEvents.onServerStop(server);
-
-      console.log(`Unsubscribed from ${guild.name}`);
-    });
+    if (client) {
+      discordServers.updateConnections(client);
+    }
   }
 });
 
 client.on("message", async (message) => {
+  discordServers.updateConnections(client);
+
   const { command } = getBotCommandArgs(message.content || "");
   const isValid = isValidCommand(command.toLowerCase());
 
   if (message.author?.bot || message.channel?.type === "dm") return;
+  const targetServerId = message.guild?.id as string;
 
-  const server = discordServers.createServer(message.guild?.id || "", message.guild?.name || "");
+  const server = discordServers.createServer(targetServerId, message.guild?.name || "");
+  const hasServer = discordServers.hasServer(targetServerId);
+  const hasConnection = discordServers.hasConnection(targetServerId);
+
+  if (hasServer && !hasConnection) {
+    if (!server?.isStopped) {
+      serverEvents.onServerStop(server);
+    }
+  }
 
   if (!isValid && !server?.isStopped && !server?.isPlaying) {
     message.channel?.send("Comando inválido!, envie o comando !loop ou !stop");
@@ -68,7 +82,7 @@ client.on("message", async (message) => {
           if (!server?.isPlaying) {
             const connection = await message.member?.voice.channel?.join();
 
-            console.log(`New play started in server *${server.name}*`);
+            logger.info(`New play started in server *${server.name}*`);
             message.channel?.send("Iniciando a festa! 🎼");
 
             if (connection) {
@@ -78,11 +92,8 @@ client.on("message", async (message) => {
           }
           break;
         case "!stop":
-          if (!server?.isStopped) {
-            message.channel?.send("Parando a festa! 🏃‍♂️");
-            serverEvents.onServerStop(server);
-          }
-
+          message.channel?.send("Parando a festa! 🏃‍♂️");
+          serverEvents.onServerStop(server);
           break;
         default:
           break;
