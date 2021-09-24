@@ -26,6 +26,9 @@
   "bin": {
     "loops": "dist/index.js"
   },
+  "engines": {
+    "node": ">= 16.6.0"
+  },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
     "@types/node": "^16.4.3",
@@ -42,6 +45,8 @@
     "ffmpeg-binaries": "3.2.2-3",
     "ffmpeg-static": "^4.4.0",
     "opusscript": "^0.0.8",
+    "pino": "^7.0.0-rc.7",
+    "pino-pretty": "^7.0.1",
     "ytdl-core": "^4.9.1"
   }
 }
