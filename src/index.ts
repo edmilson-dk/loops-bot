@@ -9,7 +9,9 @@ import { DiscordServers } from "./domain/discord-servers";
 import { ServerEvents } from "./core/server-events";
 import { logger } from "./helpers/logger";
 
-const client = new Client({});
+const client = new Client({
+  retryLimit: 3,
+});
 
 const TOKEN = process.env.BOT_SECRET_TOKEN;
 
@@ -24,7 +26,12 @@ const broadcast = client.voice?.createBroadcast();
 
 broadcast?.once("subscribe", (dispatch) => {
   logger.info("Starting player...");
+
   playMusic(broadcast, MUSICS[0]);
+});
+
+broadcast?.on("error", (err) => {
+  logger.error("Error on broadcast! " + err.message);
 });
 
 broadcast?.on("subscribe", (dispatch) => {
@@ -61,6 +68,7 @@ client.on("message", async (message) => {
 
   if (hasServer && !hasConnection) {
     if (!server?.isStopped) {
+      logger.warn(`${server.name} is stopped connection`);
       serverEvents.onServerStop(server);
     }
   }
@@ -82,7 +90,7 @@ client.on("message", async (message) => {
           if (!server?.isPlaying) {
             const connection = await message.member?.voice.channel?.join();
 
-            logger.info(`New play started in server *${server.name}*`);
+            logger.info(`New play started in server "${server.name}"`);
             message.channel?.send("Iniciando a festa! 🎼");
 
             if (connection) {
