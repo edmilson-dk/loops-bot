@@ -5,7 +5,7 @@ import { MUSICS } from "../constants";
 
 export function playMusic(broadcast: VoiceBroadcast, url: string) {
   const actualSongIndex = MUSICS.findIndex((song) => song === url);
-  const stream = ytdl(url, { filter: "audioonly", quality: "highestaudio" });
+  const stream = ytdl(url, { filter: "audioonly" });
 
   const dispatcher = broadcast.play(stream);
 
