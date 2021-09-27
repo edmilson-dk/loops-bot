@@ -43,18 +43,6 @@ broadcast?.on("subscribe", (dispatch) => {
   logger.info("Subscribed to new broadcast!");
 });
 
-/*
-broadcast?.on("unsubscribe", (dis) => {
-  const client = dis.broadcast?.client;
-
-  if (client) {
-    if (client) {
-      discordServers.updateConnections(client);
-    }
-  }
-});
-*/
-
 client.on("message", async (message) => {
   discordServers.updateConnections(client);
 
