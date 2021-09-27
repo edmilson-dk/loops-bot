@@ -26,9 +26,6 @@
   "bin": {
     "loops": "dist/index.js"
   },
-  "engines": {
-    "node": ">= 16.6.0"
-  },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
     "@types/node": "^16.4.3",
