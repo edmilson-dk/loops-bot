@@ -27,7 +27,7 @@ const broadcast = client.voice?.createBroadcast();
 broadcast?.once("subscribe", (dispatch) => {
   logger.info("Starting player...");
 
-  playMusic(broadcast, MUSICS[0]);
+  playMusic(broadcast, 0);
 });
 
 broadcast?.on("error", (err) => {
