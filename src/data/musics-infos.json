@@ -1,0 +1,28 @@
+{
+  "musics": [
+    {
+      "id": "febf3168-d493-42f0-a3db-48c27cabf3c6",
+      "name": "Bruno Mars - Talking To The Moon | Lyrics",
+      "artist": "Bruno Mars",
+      "url": "https://www.youtube.com/watch?v=U6Qfd9SwIcs",
+      "createdAt": "2021-09-29T19:57:06.783Z",
+      "updatedAt": "2021-09-29T19:57:06.783Z"
+    },
+    {
+      "id": "c7a8e05d-a17b-4c0c-93ac-d8510109d667",
+      "name": "Arcade",
+      "artist": "Duncan Laurence",
+      "url": "https://www.youtube.com/watch?v=oFrvRiixXcA",
+      "createdAt": "2021-09-29T20:02:02.376Z",
+      "updatedAt": "2021-09-29T20:02:02.376Z"
+    },
+    {
+      "id": "6a19c356-355e-4b79-9f92-711644ab3db3",
+      "name": "James Arthur - Naked (Tradução)",
+      "artist": "James Arthur",
+      "url": "https://www.youtube.com/watch?v=RiZaj_W_dJo",
+      "createdAt": "2021-09-29T22:08:19.457Z",
+      "updatedAt": "2021-09-29T22:08:19.457Z"
+    }
+  ]
+}
