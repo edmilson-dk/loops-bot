@@ -9,6 +9,8 @@ import { DiscordServers } from "./domain/discord-servers";
 import { ServerEvents } from "./core/server-events";
 import { logger } from "./helpers/logger";
 import { ManagerSystem } from "./core/manager-system";
+import { socket } from "./sockets";
+import { MusicInfoType } from "./types";
 
 const client = new Client({
   retryLimit: 3,
@@ -19,6 +21,11 @@ const TOKEN = process.env.BOT_SECRET_TOKEN;
 const discordServers = new DiscordServers();
 const serverEvents = new ServerEvents();
 const managerSystem = new ManagerSystem();
+
+socket.on("addNewMusic", (data: MusicInfoType) => {
+  console.log("addNewMusic", data);
+  managerSystem.onMusicAdd(data);
+});
 
 client.once("ready", () => {
   console.log("Ready!");

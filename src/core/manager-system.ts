@@ -1,3 +1,4 @@
+import { MusicInfoType } from "../types";
 import { FetchApi } from "./fetch-api";
 import { ManagerData } from "./manager-data";
 
@@ -11,6 +12,11 @@ export class ManagerSystem {
     return;
   }
 
+  async onMusicAdd(music: MusicInfoType) {
+    await this.storeNewMusic(music);
+    return;
+  }
+
   private async storageMusics() {
     const musics = await this.fetchApi.getMusicsList();
 
@@ -19,5 +25,10 @@ export class ManagerSystem {
     });
 
     await this.managerData.storeMusicsInfos(musics);
+  }
+
+  private async storeNewMusic(music: MusicInfoType) {
+    this.fetchApi.downloadMusic(music.id, this.saveMusicFrom);
+    this.managerData.updateMusicsInfos(music);
   }
 }
