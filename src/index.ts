@@ -8,6 +8,7 @@ import { MUSICS } from "./constants";
 import { DiscordServers } from "./domain/discord-servers";
 import { ServerEvents } from "./core/server-events";
 import { logger } from "./helpers/logger";
+import { ManagerSystem } from "./core/manager-system";
 
 const client = new Client({
   retryLimit: 3,
@@ -17,9 +18,11 @@ const TOKEN = process.env.BOT_SECRET_TOKEN;
 
 const discordServers = new DiscordServers();
 const serverEvents = new ServerEvents();
+const managerSystem = new ManagerSystem();
 
 client.once("ready", () => {
   console.log("Ready!");
+  managerSystem.onBotStart();
 });
 
 const broadcast = client.voice?.createBroadcast();
