@@ -13,6 +13,7 @@ export type MusicInfoType = {
   name: string;
   artist: string;
   url: string;
+  position: number;
 };
 
 export type MusicInfosDataFileType = {

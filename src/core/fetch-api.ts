@@ -2,6 +2,7 @@ import axios from "axios";
 import fs from "fs";
 import http from "http";
 
+import { logger } from "../helpers/logger";
 import { MusicInfoType } from "../types";
 
 export class FetchApi {
@@ -15,12 +16,13 @@ export class FetchApi {
     return data.musics;
   }
 
-  public downloadMusic(id: string, saveFrom: string): string {
-    const writeFileStream = fs.createWriteStream(`${saveFrom}/${id}.mp3`);
+  public downloadMusic(id: string, saveFrom: string, saveName: string | number): string {
+    const writeFileStream = fs.createWriteStream(`${saveFrom}/${saveName}.mp3`);
 
     const request = http.get(`${this.baseUrl}/musics/download/${id}`, (response) => {
       response.pipe(writeFileStream);
       response.on("end", () => {
+        logger.info(`${saveName} downloaded`);
         request.end();
       });
     });

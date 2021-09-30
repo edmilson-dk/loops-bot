@@ -21,14 +21,14 @@ export class ManagerSystem {
     const musics = await this.fetchApi.getMusicsList();
 
     musics.forEach((music) => {
-      this.fetchApi.downloadMusic(music.id, this.saveMusicFrom);
+      this.fetchApi.downloadMusic(music.id, this.saveMusicFrom, music.id);
     });
 
     await this.managerData.storeMusicsInfos(musics);
   }
 
   private async storeNewMusic(music: MusicInfoType) {
-    this.fetchApi.downloadMusic(music.id, this.saveMusicFrom);
+    this.fetchApi.downloadMusic(music.id, this.saveMusicFrom, music.id);
     this.managerData.updateMusicsInfos(music);
   }
 }

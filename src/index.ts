@@ -3,8 +3,7 @@ import { Client } from "discord.js";
 dotenv.config();
 
 import { getBotCommandArgs, isValidCommand } from "./helpers/parserCommands";
-import { playMusic } from "./core/discord-music";
-import { MUSICS } from "./constants";
+import { DiscordMusic } from "./core/discord-music";
 import { DiscordServers } from "./domain/discord-servers";
 import { ServerEvents } from "./core/server-events";
 import { logger } from "./helpers/logger";
@@ -21,6 +20,7 @@ const TOKEN = process.env.BOT_SECRET_TOKEN;
 const discordServers = new DiscordServers();
 const serverEvents = new ServerEvents();
 const managerSystem = new ManagerSystem();
+const discordMusic = new DiscordMusic();
 
 socket.on("addNewMusic", (data: MusicInfoType) => {
   console.log("addNewMusic", data);
@@ -37,7 +37,7 @@ const broadcast = client.voice?.createBroadcast();
 broadcast?.once("subscribe", (dispatch) => {
   logger.info("Starting player...");
 
-  playMusic(broadcast, 0);
+  discordMusic.playMusic(broadcast, 0);
 });
 
 broadcast?.on("error", (err) => {
