@@ -1,4 +1,4 @@
-import { MusicInfoType } from "../types";
+import { MusicInfoType, MusicRemovedInfos } from "../types";
 import { FetchApi } from "./fetch-api";
 import { ManagerData } from "./manager-data";
 
@@ -14,6 +14,13 @@ export class ManagerSystem {
 
   async onMusicAdd(music: MusicInfoType) {
     await this.storeNewMusic(music);
+    return;
+  }
+
+  async onMusicRemoved(music: MusicRemovedInfos) {
+    const musics = await this.fetchApi.getMusicsList();
+    await this.managerData.resetMusicsInfos(musics);
+    await this.managerData.deleteMusicFile(`${music.id}.mp3`);
     return;
   }
 
