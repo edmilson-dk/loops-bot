@@ -42,6 +42,10 @@ export class ManagerData {
     await this.rewriteMusicsInfos();
   }
 
+  async deleteMusicFile(musicFileName: string) {
+    await fs.promises.unlink(`${this.savedMusicsPath}/${musicFileName}`);
+  }
+
   getMusicsInfos(): MusicInfoType[] {
     this.updateMusicsFile();
     return this.orderMusicsByPosition();
