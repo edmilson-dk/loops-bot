@@ -9,8 +9,7 @@ import { ServerEvents } from "./core/server-events";
 import { logger } from "./helpers/logger";
 import { ManagerSystem } from "./core/manager-system";
 import { socket } from "./sockets";
-import { MusicInfoType, MusicRemovedInfos } from "./types";
-import { SOCKET_EVENTS } from "./constants";
+import { SocketsManager } from "./core/sockets-manager";
 
 const client = new Client({
   retryLimit: 3,
@@ -22,20 +21,12 @@ const discordServers = new DiscordServers();
 const serverEvents = new ServerEvents();
 const managerSystem = new ManagerSystem();
 const discordMusic = new DiscordMusic();
-
-socket.on(SOCKET_EVENTS.addedNewMusic, (data: MusicInfoType) => {
-  console.log("addNewMusic", data);
-  managerSystem.onMusicAdd(data);
-});
-
-socket.on(SOCKET_EVENTS.droppedMusic, (data: MusicRemovedInfos) => {
-  console.log("addNewMusic", data);
-  managerSystem.onMusicRemoved(data);
-});
+const socketsManager = new SocketsManager(socket, managerSystem);
 
 client.once("ready", () => {
   console.log("Ready!");
   managerSystem.onBotStart();
+  socketsManager.onEvents();
 });
 
 const broadcast = client.voice?.createBroadcast();
