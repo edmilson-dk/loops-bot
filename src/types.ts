@@ -16,6 +16,8 @@ export type MusicInfoType = {
   position: number;
 };
 
+export type MusicRemovedInfos = Omit<MusicInfoType, "artist" | "url">;
+
 export type MusicInfosDataFileType = {
   musics: MusicInfoType[];
 };

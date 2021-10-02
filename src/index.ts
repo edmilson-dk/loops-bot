@@ -9,7 +9,8 @@ import { ServerEvents } from "./core/server-events";
 import { logger } from "./helpers/logger";
 import { ManagerSystem } from "./core/manager-system";
 import { socket } from "./sockets";
-import { MusicInfoType } from "./types";
+import { MusicInfoType, MusicRemovedInfos } from "./types";
+import { SOCKET_EVENTS } from "./constants";
 
 const client = new Client({
   retryLimit: 3,
@@ -22,9 +23,14 @@ const serverEvents = new ServerEvents();
 const managerSystem = new ManagerSystem();
 const discordMusic = new DiscordMusic();
 
-socket.on("addNewMusic", (data: MusicInfoType) => {
+socket.on(SOCKET_EVENTS.addedNewMusic, (data: MusicInfoType) => {
   console.log("addNewMusic", data);
   managerSystem.onMusicAdd(data);
+});
+
+socket.on(SOCKET_EVENTS.droppedMusic, (data: MusicRemovedInfos) => {
+  console.log("addNewMusic", data);
+  managerSystem.onMusicRemoved(data);
 });
 
 client.once("ready", () => {
