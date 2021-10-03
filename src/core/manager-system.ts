@@ -1,3 +1,5 @@
+import path from "path";
+
 import { MusicInfoType, MusicRemovedInfos } from "../types";
 import { FetchApi } from "./fetch-api";
 import { ManagerData } from "./manager-data";
@@ -5,7 +7,7 @@ import { ManagerData } from "./manager-data";
 export class ManagerSystem {
   private readonly managerData: ManagerData = new ManagerData();
   private readonly fetchApi: FetchApi = new FetchApi();
-  private readonly saveMusicFrom: string = "./musics";
+  private readonly saveMusicFrom: string = path.resolve(__dirname + "../../../musics");
 
   async onBotStart() {
     await this.storageMusics();
