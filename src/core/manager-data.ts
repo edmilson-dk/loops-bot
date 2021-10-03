@@ -4,7 +4,10 @@ import path from "path";
 import { MusicInfosDataFileType, MusicInfoType } from "../types";
 
 export class ManagerData {
-  private readonly musicsInfosPath: string = path.join(__dirname, "../data/musics-infos.json");
+  private readonly musicsInfosPath: string = path.join(
+    __dirname,
+    "../../../data/musics-infos.json",
+  );
   private readonly savedMusicsPath: string = path.resolve(__dirname + "../../../musics");
   private musicInfosFile: MusicInfosDataFileType = {} as MusicInfosDataFileType;
 
