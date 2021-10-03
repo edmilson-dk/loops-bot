@@ -6,7 +6,7 @@
   "author": "edmilson-dk <droidvidaboa@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "rm -rf dist && tsc",
+    "build": "node build.js && rm -rf dist && tsc",
     "start": "node dist/index.js",
     "start:dev": "npx ts-node-dev --respawn --pretty --transpile-only src/index.ts",
     "format": "prettier --write \"src/**/*.ts\"",

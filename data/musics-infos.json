@@ -1,3 +1,13 @@
 {
-  "musics": []
+  "musics": [
+    {
+      "id": "45e73fa2-94b0-418f-921e-b3d3ed5f5c19",
+      "name": "Arcade",
+      "artist": "Duncan Laurence",
+      "url": "https://www.youtube.com/watch?v=oFrvRiixXcA",
+      "position": 0,
+      "createdAt": "2021-10-03T22:59:04.305Z",
+      "updatedAt": "2021-10-03T22:59:04.305Z"
+    }
+  ]
 }
