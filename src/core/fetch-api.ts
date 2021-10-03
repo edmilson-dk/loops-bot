@@ -1,6 +1,6 @@
 import axios from "axios";
 import fs from "fs";
-import http from "http";
+import https from "https";
 
 import { logger } from "../helpers/logger";
 import { MusicInfoType } from "../types";
@@ -19,7 +19,7 @@ export class FetchApi {
   public downloadMusic(id: string, saveFrom: string, saveName: string | number): string {
     const writeFileStream = fs.createWriteStream(`${saveFrom}/${saveName}.mp3`);
 
-    const request = http.get(`${this.baseUrl}/musics/download/${id}`, (response) => {
+    const request = https.get(`${this.baseUrl}/musics/download/${id}`, (response) => {
       response.pipe(writeFileStream);
       response.on("end", () => {
         logger.info(`${saveName} downloaded`);
