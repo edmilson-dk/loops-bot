@@ -100,6 +100,9 @@ client.on("message", async (message) => {
           message.channel?.send("Parando a festa! 🏃‍♂️");
           serverEvents.onServerStop(server);
           break;
+        case "!music":
+          const embed = discordMusic.sendMusicEmbed();
+          message.channel?.send(embed);
         default:
           break;
       }
