@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { Client } from "discord.js";
+import { Client, TextChannel } from "discord.js";
 dotenv.config();
 
 import { getBotCommandArgs, isValidCommand } from "./helpers/parserCommands";
@@ -10,6 +10,7 @@ import { logger } from "./helpers/logger";
 import { ManagerSystem } from "./core/manager-system";
 import { socket } from "./sockets";
 import { SocketsManager } from "./core/sockets-manager";
+import { GenericCommands } from "./core/generic-commands";
 
 const client = new Client({
   retryLimit: 3,
@@ -22,6 +23,7 @@ const serverEvents = new ServerEvents();
 const managerSystem = new ManagerSystem();
 const discordMusic = new DiscordMusic();
 const socketsManager = new SocketsManager(socket, managerSystem);
+const genericCommands = new GenericCommands();
 
 client.once("ready", () => {
   console.log("Ready!");
@@ -52,6 +54,7 @@ broadcast?.on("subscribe", (dispatch) => {
 
 client.on("message", async (message) => {
   discordServers.updateConnections(client);
+  const channel = message.channel as TextChannel;
 
   const { command } = getBotCommandArgs(message.content || "");
   const isValid = isValidCommand(command.toLowerCase());
@@ -71,12 +74,12 @@ client.on("message", async (message) => {
   }
 
   if (!isValid && !server?.isStopped && !server?.isPlaying) {
-    message.channel?.send("Comando inválido!, envie o comando !loop ou !stop");
+    channel.send("Comando inválido!, envie o comando !loop ou !stop");
     return;
   }
 
   if (isValid && !message.member?.voice.channel && !server?.isPlaying) {
-    message.channel?.send("Você precisa estar em um canal de voz para usar este comando!");
+    channel.send("Você precisa estar em um canal de voz para usar este comando!");
     return;
   }
 
@@ -88,7 +91,7 @@ client.on("message", async (message) => {
             const connection = await message.member?.voice.channel?.join();
 
             logger.info(`New play started in server "${server.name}"`);
-            message.channel?.send("Iniciando a festa! 🎼");
+            channel.send("Iniciando a festa! 🎼");
 
             if (connection) {
               connection.play(broadcast);
@@ -97,17 +100,19 @@ client.on("message", async (message) => {
           }
           break;
         case "!stop":
-          message.channel?.send("Parando a festa! 🏃‍♂️");
+          channel.send("Parando a festa! 🏃‍♂️");
           serverEvents.onServerStop(server);
           break;
         case "!music":
           const embed = discordMusic.sendMusicEmbed();
-          message.channel?.send(embed);
+          channel.send(embed);
+        case "!help":
+          genericCommands.sendCommandsHelp(channel);
         default:
           break;
       }
     } catch (error) {
-      message.channel?.send("Ops! Algo deu errado, tente novamente!");
+      channel.send("Ops! Algo deu errado, tente novamente!");
     }
   }
 });
