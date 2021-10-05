@@ -1,5 +1,6 @@
 import Discord, { VoiceBroadcast } from "discord.js";
 import fs from "fs";
+import { logger } from "../helpers/logger";
 import { MusicInfoType } from "../types";
 
 import { ManagerData } from "./manager-data";
@@ -28,13 +29,13 @@ export class DiscordMusic {
   playMusic(broadcast: VoiceBroadcast, musicIndex: number) {
     const actualSongFile = this.getActualMusicFile(musicIndex);
 
-    console.log(`Playing ${actualSongFile}`);
+    logger.info(`Playing ${actualSongFile}`);
 
     const stream = fs.createReadStream(`./musics/${actualSongFile}`);
     const dispatcher = broadcast.play(stream);
 
     dispatcher.on("finish", () => {
-      console.log(actualSongFile, "has finished playing!");
+      logger.info(actualSongFile + "has finished playing!");
       const musics = this.getMusics();
       const index = musics[musicIndex + 1] ? musicIndex + 1 : 0;
 
