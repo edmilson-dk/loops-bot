@@ -1,22 +1,3 @@
 {
-  "musics": [
-    {
-      "id": "7d3e5b1b-ee0e-42ed-a456-3b5d95a7150a",
-      "name": "Lewis capaldi - Before You Go (Lyrics)",
-      "artist": "Lewis capaldi",
-      "url": "https://www.youtube.com/watch?v=zutCwEEMc-w",
-      "position": 0,
-      "createdAt": "2021-10-04T23:44:18.342Z",
-      "updatedAt": "2021-10-04T23:44:18.342Z"
-    },
-    {
-      "id": "a44fb1ce-7160-4584-b87a-ad0388d3313a",
-      "name": "Terra de Ninguém (Clipe Oficial) - Fabio Brazza e Cachola",
-      "artist": "Fabio Brazza",
-      "url": "https://www.youtube.com/watch?v=zecspHTfwjo&list=RDMM&start_radio=1&rv=MMfpp0-lnw4",
-      "position": 1,
-      "createdAt": "2021-10-04T23:57:45.747Z",
-      "updatedAt": "2021-10-04T23:57:45.747Z"
-    }
-  ]
+  "musics": []
 }
