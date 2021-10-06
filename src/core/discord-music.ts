@@ -1,6 +1,7 @@
 import Discord, { VoiceBroadcast } from "discord.js";
 import fs from "fs";
 import { logger } from "../helpers/logger";
+import { socket } from "../sockets";
 import { MusicInfoType } from "../types";
 
 import { ManagerData } from "./manager-data";
@@ -38,6 +39,10 @@ export class DiscordMusic {
       logger.info(actualSongFile + "has finished playing!");
       const musics = this.getMusics();
       const index = musics[musicIndex + 1] ? musicIndex + 1 : 0;
+
+      if (index === musics.length - 1) {
+        socket.emit("updated_musics", index);
+      }
 
       this.playMusic(broadcast, index);
     });
