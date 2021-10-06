@@ -106,8 +106,10 @@ client.on("message", async (message) => {
         case "!music":
           const embed = discordMusic.sendMusicEmbed();
           channel.send(embed);
+          break;
         case "!help":
           genericCommands.sendCommandsHelp(channel);
+          break;
         default:
           break;
       }
