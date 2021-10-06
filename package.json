@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",
+    "@types/cron": "^1.7.3",
     "@types/dotenv": "^8.2.0",
     "@types/node": "^16.4.3",
     "@types/socket.io-client": "^3.0.0",
@@ -40,6 +41,7 @@
   "dependencies": {
     "@discordjs/opus": "^0.6.0",
     "axios": "^0.21.4",
+    "cron": "^1.8.2",
     "discord.js": "12.0.0",
     "dotenv": "^10.0.0",
     "opusscript": "^0.0.8",

@@ -32,4 +32,8 @@ export class FetchApi {
 
     return id;
   }
+
+  public async emitUpdateMusicList() {
+    await this.API.get("/update");
+  }
 }

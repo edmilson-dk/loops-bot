@@ -40,9 +40,9 @@ export class DiscordMusic {
       const musics = this.getMusics();
       const index = musics[musicIndex + 1] ? musicIndex + 1 : 0;
 
-      if (index === musics.length - 1) {
-        socket.emit("updated_musics", index);
-      }
+      // if (index === musics.length - 1) {
+      //   socket.emit("updated_musics", index);
+      // }
 
       this.playMusic(broadcast, index);
     });

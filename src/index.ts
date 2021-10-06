@@ -8,9 +8,9 @@ import { DiscordServers } from "./domain/discord-servers";
 import { ServerEvents } from "./core/server-events";
 import { logger } from "./helpers/logger";
 import { ManagerSystem } from "./core/manager-system";
-import { socket } from "./sockets";
 import { SocketsManager } from "./core/sockets-manager";
 import { GenericCommands } from "./core/generic-commands";
+import { ManagerCronsJobs } from "./core/manager-crons-jobs";
 
 const client = new Client({
   retryLimit: 3,
@@ -22,20 +22,21 @@ const discordServers = new DiscordServers();
 const serverEvents = new ServerEvents();
 const managerSystem = new ManagerSystem();
 const discordMusic = new DiscordMusic();
-const socketsManager = new SocketsManager(socket, managerSystem);
+const socketsManager = new SocketsManager(managerSystem);
 const genericCommands = new GenericCommands();
+const jobsManager = new ManagerCronsJobs();
 
 client.once("ready", () => {
   console.log("Ready!");
   managerSystem.onBotStart();
   socketsManager.onEvents();
+  jobsManager.startUpdatedMusicsJob();
 });
 
 const broadcast = client.voice?.createBroadcast();
 
 broadcast?.once("subscribe", (dispatch) => {
   logger.info("Starting player...");
-
   discordMusic.playMusic(broadcast, 0);
 });
 
