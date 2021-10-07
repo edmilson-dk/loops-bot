@@ -36,6 +36,16 @@ export class ManagerData {
   }
 
   async updateMusicsInfos(musicsInfos: MusicInfoType): Promise<void> {
+    const exists = this.musicInfosFile.musics.find((music) => music.id === musicsInfos.id);
+
+    if (exists) {
+      const removed = this.musicInfosFile.musics.filter((music) => music.id !== musicsInfos.id);
+      removed.push(musicsInfos);
+      this.musicInfosFile.musics = removed;
+      await this.rewriteMusicsInfos();
+      return;
+    }
+
     this.musicInfosFile.musics.push(musicsInfos);
     await this.rewriteMusicsInfos();
   }
