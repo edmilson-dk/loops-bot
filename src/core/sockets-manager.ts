@@ -21,11 +21,8 @@ export class SocketsManager {
     this.managerSystem.onMusicRemoved(data);
   }
 
-  public emitUpdateMusicsList() {
-    return () => {
-      console.log("chamou");
-      socket.emit(SOCKET_EVENTS.updateServerMusics, { teste: true });
-    };
+  public emitMusicPlaying(data: MusicInfoType) {
+    socket.emit(SOCKET_EVENTS.musicIsPlaying, data);
   }
 
   onEvents() {

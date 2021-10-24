@@ -11,6 +11,8 @@ import { ManagerSystem } from "./core/manager-system";
 import { SocketsManager } from "./core/sockets-manager";
 import { GenericCommands } from "./core/generic-commands";
 import { ManagerCronsJobs } from "./core/manager-crons-jobs";
+import { socket } from "./sockets";
+import { ManagerData } from "./core/manager-data";
 
 const client = new Client({
   retryLimit: 3,
@@ -21,16 +23,21 @@ const TOKEN = process.env.BOT_SECRET_TOKEN;
 const discordServers = new DiscordServers();
 const serverEvents = new ServerEvents();
 const managerSystem = new ManagerSystem();
-const discordMusic = new DiscordMusic();
 const socketsManager = new SocketsManager(managerSystem);
 const genericCommands = new GenericCommands();
 const jobsManager = new ManagerCronsJobs();
+const managerData = new ManagerData();
+const discordMusic = new DiscordMusic(managerData, socketsManager);
 
 client.once("ready", () => {
   console.log("Ready!");
   managerSystem.onBotStart();
   socketsManager.onEvents();
   jobsManager.startUpdatedMusicsJob();
+
+  socket.on("teste", (data) => {
+    console.log(data);
+  });
 });
 
 const broadcast = client.voice?.createBroadcast();
