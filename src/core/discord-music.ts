@@ -1,15 +1,21 @@
-import Discord, { VoiceBroadcast } from "discord.js";
+import Discord, { MessageEmbed, VoiceBroadcast } from "discord.js";
 import fs from "fs";
 import { logger } from "../helpers/logger";
-import { socket } from "../sockets";
 import { MusicInfoType } from "../types";
 
 import { ManagerData } from "./manager-data";
+import { SocketsManager } from "./sockets-manager";
 
 export class DiscordMusic {
-  private readonly managerData: ManagerData = new ManagerData();
-  private readonly messageEmbed = new Discord.MessageEmbed();
+  private readonly managerData: ManagerData;
+  private readonly socketManager: SocketsManager;
+  private readonly messageEmbed: MessageEmbed = new Discord.MessageEmbed();
   private actualMusic: MusicInfoType = {} as MusicInfoType;
+
+  constructor(managerData: ManagerData, socketManager: SocketsManager) {
+    this.managerData = managerData;
+    this.socketManager = socketManager;
+  }
 
   getMusics() {
     return this.managerData.getMusicsInfos();
@@ -30,6 +36,7 @@ export class DiscordMusic {
   playMusic(broadcast: VoiceBroadcast, musicIndex: number) {
     const actualSongFile = this.getActualMusicFile(musicIndex);
 
+    this.socketManager.emitMusicPlaying(this.actualMusic);
     logger.info(`Playing ${actualSongFile}`);
 
     const stream = fs.createReadStream(`./musics/${actualSongFile}`);
@@ -39,10 +46,6 @@ export class DiscordMusic {
       logger.info(actualSongFile + "has finished playing!");
       const musics = this.getMusics();
       const index = musics[musicIndex + 1] ? musicIndex + 1 : 0;
-
-      // if (index === musics.length - 1) {
-      //   socket.emit("updated_musics", index);
-      // }
 
       this.playMusic(broadcast, index);
     });

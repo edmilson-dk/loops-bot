@@ -1,3 +1,44 @@
 {
-  "musics": []
+  "musics": [
+    {
+      "id": "379353fb-1b82-4aef-91e6-87fd36b75e06",
+      "name": "Alok, Bruno Martini feat. Zeeba - Hear Me Now (Official Music Video)",
+      "artist": "Alok",
+      "url": "https://www.youtube.com/watch?v=JVpTp8IHdEg",
+      "position": 0,
+      "createdAt": "2021-10-16T20:15:12.471Z",
+      "updatedAt": "2021-10-16T20:15:12.471Z",
+      "duration": 265
+    },
+    {
+      "id": "7a28b1fe-6e16-4263-96c8-cff0e5e0b3e3",
+      "name": "Hozier - Take Me To Church (Official Video)",
+      "artist": "Hozier",
+      "url": "https://www.youtube.com/watch?v=PVjiKRfKpPI",
+      "position": 1,
+      "createdAt": "2021-10-16T22:18:38.464Z",
+      "updatedAt": "2021-10-16T22:18:38.464Z",
+      "duration": 257
+    },
+    {
+      "id": "790722db-3bf1-4cbe-a930-f9cb51681088",
+      "name": "Numb [Official Music Video] - Linkin Park",
+      "artist": "Linkin Park",
+      "url": "https://www.youtube.com/watch?v=kXYiU_JCYtU",
+      "position": 2,
+      "createdAt": "2021-10-16T22:20:55.624Z",
+      "updatedAt": "2021-10-16T22:20:55.624Z",
+      "duration": 187
+    },
+    {
+      "id": "e5a00e87-150b-46b8-a2db-102bff22af14",
+      "name": "Alan Walker - Faded",
+      "artist": "Alan Walker",
+      "url": "https://www.youtube.com/watch?v=60ItHLz5WEA&list=PLiSzxQJ4pCKzj_rCvdJ5xRIzq02ROG5bh&index=4",
+      "position": 3,
+      "createdAt": "2021-10-19T19:10:19.508Z",
+      "updatedAt": "2021-10-19T19:10:19.508Z",
+      "duration": 213
+    }
+  ]
 }
