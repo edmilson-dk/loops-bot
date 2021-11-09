@@ -10,19 +10,19 @@ export class GenericCommands {
       .setDescription("Comandos e suas funções no bot.")
       .addFields([
         {
-          name: "!loop",
+          name: "!tocar",
           value: "Envie este comando para iniciar o bot em seu chat de voz.",
         },
         {
-          name: "!stop",
+          name: "!parar",
           value: "Envie este comando quando você desejar parar o bot em seu chat de voz.",
         },
         {
-          name: "!music",
+          name: "!musica",
           value: "Envie este comando para visualizar informações da música que está tocando.",
         },
         {
-          name: "!help",
+          name: "!ajuda",
           value: "Quando precisar de ajuda, envie um !help.",
         },
       ])
