@@ -11,7 +11,6 @@ import { ManagerSystem } from "./core/manager-system";
 import { SocketsManager } from "./core/sockets-manager";
 import { GenericCommands } from "./core/generic-commands";
 import { ManagerCronsJobs } from "./core/manager-crons-jobs";
-import { socket } from "./sockets";
 import { ManagerData } from "./core/manager-data";
 
 const client = new Client({
@@ -34,10 +33,6 @@ client.once("ready", () => {
   managerSystem.onBotStart();
   socketsManager.onEvents();
   jobsManager.startUpdatedMusicsJob();
-
-  socket.on("teste", (data) => {
-    console.log(data);
-  });
 });
 
 const broadcast = client.voice?.createBroadcast();
@@ -82,7 +77,7 @@ client.on("message", async (message) => {
   }
 
   if (!isValid && !server?.isStopped && !server?.isPlaying) {
-    channel.send("Comando inválido!, envie o comando !loop ou !stop");
+    channel.send("Comando inválido!, envie o comando !tocar ou !parar");
     return;
   }
 
@@ -94,7 +89,7 @@ client.on("message", async (message) => {
   if (broadcast) {
     try {
       switch (command) {
-        case "!loop":
+        case "!tocar":
           if (!server?.isPlaying) {
             const connection = await message.member?.voice.channel?.join();
 
@@ -107,15 +102,15 @@ client.on("message", async (message) => {
             }
           }
           break;
-        case "!stop":
+        case "!parar":
           channel.send("Parando a festa! 🏃‍♂️");
           serverEvents.onServerStop(server);
           break;
-        case "!music":
+        case "!musica":
           const embed = discordMusic.sendMusicEmbed();
           channel.send(embed);
           break;
-        case "!help":
+        case "!ajuda":
           genericCommands.sendCommandsHelp(channel);
           break;
         default:

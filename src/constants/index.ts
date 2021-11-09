@@ -1,4 +1,4 @@
-export const COMMANDS_NAMES = ["!loop", "!stop", "!music", "!help"];
+export const COMMANDS_NAMES = ["!tocar", "!parar", "!musica", "!ajuda"];
 export const SOCKET_EVENTS = {
   droppedMusic: "droppedMusic",
   addedNewMusic: "addedNewMusic",
