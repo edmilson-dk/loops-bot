@@ -1,7 +1,7 @@
 import { SOCKET_EVENTS } from "../constants";
 import { logger } from "../helpers/logger";
 import { socket } from "../sockets";
-import { MusicInfoType, MusicRemovedInfos } from "../types";
+import { DiscordServerType, MusicInfoType, MusicRemovedInfos } from "../types";
 import { ManagerSystem } from "./manager-system";
 
 export class SocketsManager {
@@ -23,6 +23,10 @@ export class SocketsManager {
 
   public emitMusicPlaying(data: MusicInfoType) {
     socket.emit(SOCKET_EVENTS.musicIsPlaying, data);
+  }
+
+  public emitChangeServersConnected(data: DiscordServerType[]) {
+    socket.emit(SOCKET_EVENTS.changeServersConnected, data);
   }
 
   onEvents() {
