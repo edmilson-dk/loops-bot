@@ -1,6 +1,6 @@
 import { VoiceConnection } from "discord.js";
 import { DiscordServers } from "./discord-servers";
-import { DiscordServerType } from "../types";
+import { DiscordServerType, ServerConnectedType } from "../types";
 import { SocketsManager } from "./sockets-manager";
 
 export class ServerEvents {
@@ -14,11 +14,14 @@ export class ServerEvents {
 
   public onServersChangeConnection() {
     const serversConnected = this.discordServers.getServersPlaying();
-    const removedVoiceConnectProperty = serversConnected.map((item) => {
-      return { ...item, voiceConnect: null };
+    const formmated: ServerConnectedType[] = serversConnected.map((item) => {
+      return {
+        id: item.id,
+        name: item.name,
+      };
     });
 
-    this.socketsManager.emitChangeServersConnected(removedVoiceConnectProperty);
+    this.socketsManager.emitChangeServersConnected(formmated);
     return this;
   }
 
