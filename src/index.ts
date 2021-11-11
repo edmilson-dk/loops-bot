@@ -4,7 +4,7 @@ dotenv.config();
 
 import { getBotCommandArgs, isValidCommand } from "./helpers/parserCommands";
 import { DiscordMusic } from "./core/discord-music";
-import { DiscordServers } from "./domain/discord-servers";
+import { DiscordServers } from "./core/discord-servers";
 import { ServerEvents } from "./core/server-events";
 import { logger } from "./helpers/logger";
 import { ManagerSystem } from "./core/manager-system";
@@ -20,13 +20,13 @@ const client = new Client({
 const TOKEN = process.env.BOT_SECRET_TOKEN;
 
 const discordServers = new DiscordServers();
-const serverEvents = new ServerEvents();
 const managerSystem = new ManagerSystem();
 const socketsManager = new SocketsManager(managerSystem);
 const genericCommands = new GenericCommands();
 const jobsManager = new ManagerCronsJobs();
 const managerData = new ManagerData();
 const discordMusic = new DiscordMusic(managerData, socketsManager);
+const serverEvents = new ServerEvents(discordServers, socketsManager);
 
 client.once("ready", () => {
   console.log("Ready!");
@@ -99,12 +99,15 @@ client.on("message", async (message) => {
             if (connection) {
               connection.play(broadcast);
               serverEvents.onServerLoop(server, connection);
+              serverEvents.onServersChangeConnection();
+              break;
             }
           }
           break;
         case "!parar":
           channel.send("Parando a festa! 🏃‍♂️");
           serverEvents.onServerStop(server);
+          serverEvents.onServersChangeConnection();
           break;
         case "!musica":
           const embed = discordMusic.sendMusicEmbed();
@@ -117,6 +120,7 @@ client.on("message", async (message) => {
           break;
       }
     } catch (error) {
+      console.log(error);
       channel.send("Ops! Algo deu errado, tente novamente!");
     }
   }
