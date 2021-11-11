@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",
+    "@types/chalk": "^2.2.0",
     "@types/cron": "^1.7.3",
     "@types/dotenv": "^8.2.0",
     "@types/node": "^16.4.3",
