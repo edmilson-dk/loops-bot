@@ -1,7 +1,27 @@
 import { VoiceConnection } from "discord.js";
+import { DiscordServers } from "./discord-servers";
 import { DiscordServerType } from "../types";
+import { SocketsManager } from "./sockets-manager";
 
 export class ServerEvents {
+  private readonly discordServers: DiscordServers;
+  private readonly socketsManager: SocketsManager;
+
+  constructor(discordServers: DiscordServers, socketsManager: SocketsManager) {
+    this.discordServers = discordServers;
+    this.socketsManager = socketsManager;
+  }
+
+  public onServersChangeConnection() {
+    const serversConnected = this.discordServers.getServersPlaying();
+    const removedVoiceConnectProperty = serversConnected.map((item) => {
+      return { ...item, voiceConnect: null };
+    });
+
+    this.socketsManager.emitChangeServersConnected(removedVoiceConnectProperty);
+    return this;
+  }
+
   public onServerLoop(server: DiscordServerType, connection: VoiceConnection) {
     server.isPlaying = true;
     server.isStopped = false;
