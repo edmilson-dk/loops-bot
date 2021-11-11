@@ -6,4 +6,5 @@ export const SOCKET_EVENTS = {
   musicIsPlaying: "music_is_playing",
   getActualMusicPlaying: "get_actual_music_playing",
   loopMusicIsPlaying: "loop_music_is_playing",
+  changeServersConnected: "change_servers_connected",
 };
