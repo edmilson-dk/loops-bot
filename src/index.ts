@@ -4,7 +4,7 @@ dotenv.config();
 
 import { getBotCommandArgs, isValidCommand } from "./helpers/parserCommands";
 import { DiscordMusic } from "./core/discord-music";
-import { DiscordServers } from "./domain/discord-servers";
+import { DiscordServers } from "./core/discord-servers";
 import { ServerEvents } from "./core/server-events";
 import { logger } from "./helpers/logger";
 import { ManagerSystem } from "./core/manager-system";
@@ -20,13 +20,13 @@ const client = new Client({
 const TOKEN = process.env.BOT_SECRET_TOKEN;
 
 const discordServers = new DiscordServers();
-const serverEvents = new ServerEvents();
 const managerSystem = new ManagerSystem();
 const socketsManager = new SocketsManager(managerSystem);
 const genericCommands = new GenericCommands();
 const jobsManager = new ManagerCronsJobs();
 const managerData = new ManagerData();
 const discordMusic = new DiscordMusic(managerData, socketsManager);
+const serverEvents = new ServerEvents(discordServers, socketsManager);
 
 client.once("ready", () => {
   console.log("Ready!");
@@ -86,6 +86,8 @@ client.on("message", async (message) => {
     return;
   }
 
+  // TODO: Refatorar este código organizando melhor os métodos utilizados
+
   if (broadcast) {
     try {
       switch (command) {
@@ -94,17 +96,22 @@ client.on("message", async (message) => {
             const connection = await message.member?.voice.channel?.join();
 
             logger.info(`New play started in server "${server.name}"`);
-            channel.send("Iniciando a festa! 🎼");
+            channel.send("Iniciando transmissão da Rede da Legalidade 📻");
 
             if (connection) {
               connection.play(broadcast);
               serverEvents.onServerLoop(server, connection);
+              serverEvents.onServersChangeConnection();
+              break;
             }
           }
           break;
         case "!parar":
-          channel.send("Parando a festa! 🏃‍♂️");
+          channel.send(`
+            Poderei ser esmagado. Poderei ser destruído. Poderei ser morto [...] Estaremos aqui para morrer, se necessário. Um dia, nossos filhos e irmãos farão a independência do nosso povo!\n\nUm abraço, meu povo querido! 🇧🇷
+          `);
           serverEvents.onServerStop(server);
+          serverEvents.onServersChangeConnection();
           break;
         case "!musica":
           const embed = discordMusic.sendMusicEmbed();

@@ -1,5 +1,5 @@
 import { Client } from "discord.js";
-import { DiscordServerType } from "../../types";
+import { DiscordServerType } from "../types";
 
 export class DiscordServers {
   private servers: DiscordServerType[] = [];
@@ -62,5 +62,9 @@ export class DiscordServers {
 
   public hasServer(serverId: string): boolean {
     return this.findServerIndex(serverId) >= 0;
+  }
+
+  public getServersPlaying(): DiscordServerType[] {
+    return this.servers.filter((server) => server.isPlaying);
   }
 }

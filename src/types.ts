@@ -21,3 +21,8 @@ export type MusicRemovedInfos = Omit<MusicInfoType, "artist" | "url">;
 export type MusicInfosDataFileType = {
   musics: MusicInfoType[];
 };
+
+export type ServerConnectedType = {
+  id: string;
+  name: string;
+};
