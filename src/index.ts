@@ -86,6 +86,8 @@ client.on("message", async (message) => {
     return;
   }
 
+  // TODO: Refatorar este código organizando melhor os métodos utilizados
+
   if (broadcast) {
     try {
       switch (command) {
@@ -94,7 +96,7 @@ client.on("message", async (message) => {
             const connection = await message.member?.voice.channel?.join();
 
             logger.info(`New play started in server "${server.name}"`);
-            channel.send("Iniciando a festa! 🎼");
+            channel.send("Iniciando transmissão da Rede da Legalidade 📻");
 
             if (connection) {
               connection.play(broadcast);
@@ -105,7 +107,9 @@ client.on("message", async (message) => {
           }
           break;
         case "!parar":
-          channel.send("Parando a festa! 🏃‍♂️");
+          channel.send(`
+            Poderei ser esmagado. Poderei ser destruído. Poderei ser morto [...] Estaremos aqui para morrer, se necessário. Um dia, nossos filhos e irmãos farão a independência do nosso povo!\n\nUm abraço, meu povo querido! 🇧🇷
+          `);
           serverEvents.onServerStop(server);
           serverEvents.onServersChangeConnection();
           break;
@@ -120,7 +124,6 @@ client.on("message", async (message) => {
           break;
       }
     } catch (error) {
-      console.log(error);
       channel.send("Ops! Algo deu errado, tente novamente!");
     }
   }
